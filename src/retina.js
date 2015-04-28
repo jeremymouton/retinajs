@@ -1,3 +1,13 @@
+/*!
+ * Retina.js v1.3.0
+ *
+ * Copyright 2014 Imulus, LLC
+ * Released under the MIT license
+ *
+ * Retina.js is an open source script that makes it easy to serve
+ * high-resolution images to devices with retina displays.
+ */
+
 (function() {
     var root = (typeof exports === 'undefined' ? window : exports);
     var config = {
@@ -33,18 +43,26 @@
         if (context === null) {
             context = root;
         }
-        context.addEventListener('load', function (){
-            var images = document.getElementsByTagName('img'), imagesLength = images.length, retinaImages = [], i, image;
-            for (i = 0; i < imagesLength; i += 1) {
-                image = images[i];
 
-                if (!!!image.getAttributeNode('data-no-retina')) {
-                    if (image.src) {
-                        retinaImages.push(new RetinaImage(image));
-                    }
+        var existing_onload = context.onload || function(){};
+
+        context.onload = function() {
+            var images = document.getElementsByTagName('img'), retinaImages = [], i, image;
+
+            for (i = 0; i < images.length; i += 1) {
+                image = images[i];
+                var imageSource = image.src,
+                    imageExt    = imageSource.substr(imageSource.lastIndexOf('.') + 1);
+
+
+                if (!!!image.getAttributeNode('data-no-retina') && imageExt !== 'svg') {
+                    retinaImages.push(new RetinaImage(image));
+                    console.log(imageSource);
+                    console.log(imageExt);
                 }
             }
-        });
+            existing_onload();
+        };
     };
 
     Retina.isRetina = function(){
@@ -62,7 +80,7 @@
     };
 
 
-    var regexMatch = /\.[\w\?=]+$/;
+    var regexMatch = /\.\w+$/;
     function suffixReplace (match) {
         return config.retinaImageSuffix + match;
     }
@@ -97,12 +115,12 @@
 
     RetinaImagePath.prototype.check_2x_variant = function(callback) {
         var http, that = this;
-        if (!this.perform_check && typeof this.at_2x_path !== 'undefined' && this.at_2x_path !== null) {
+        if (this.is_external()) {
+            return callback(false);
+        } else if (!this.perform_check && typeof this.at_2x_path !== 'undefined' && this.at_2x_path !== null) {
             return callback(true);
         } else if (this.at_2x_path in RetinaImagePath.confirmed_paths) {
             return callback(true);
-        } else if (this.is_external()) {
-            return callback(false);
         } else {
             http = new XMLHttpRequest();
             http.open('HEAD', this.at_2x_path);
@@ -128,6 +146,7 @@
             http.send();
         }
     };
+
 
     function RetinaImage(el) {
         this.el = el;

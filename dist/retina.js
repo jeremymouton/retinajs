@@ -48,9 +48,14 @@
 
         context.onload = function() {
             var images = document.getElementsByTagName('img'), retinaImages = [], i, image;
+
             for (i = 0; i < images.length; i += 1) {
                 image = images[i];
-                if (!!!image.getAttributeNode('data-no-retina')) {
+                var imageSource = image.src,
+                    imageExt    = imageSource.substr(imageSource.lastIndexOf('.') + 1);
+
+
+                if (!!!image.getAttributeNode('data-no-retina') && imageExt !== 'svg') {
                     retinaImages.push(new RetinaImage(image));
                 }
             }
