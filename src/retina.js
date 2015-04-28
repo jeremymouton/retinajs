@@ -153,12 +153,13 @@
                 setTimeout(load, 5);
             } else {
                 if (config.force_original_dimensions) {
-                    if (that.el.offsetWidth == 0 && that.el.offsetHeight == 0) {
-                        that.el.setAttribute('width', that.el.naturalWidth);
-                        that.el.setAttribute('height', that.el.naturalHeight);
-                    } else {
+                    if (that.el.offsetWidth && that.el.offsetHeight) {
                         that.el.setAttribute('width', that.el.offsetWidth);
                         that.el.setAttribute('height', that.el.offsetHeight);
+                    }
+                    else {
+                        that.el.setAttribute('width', that.el.naturalWidth);
+                        that.el.setAttribute('height', that.el.naturalHeight);
                     }
                 }
 
