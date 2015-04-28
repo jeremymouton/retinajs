@@ -1,5 +1,14 @@
 # retina.js [![Build Status](https://secure.travis-ci.org/imulus/retinajs.png?branch=master)](http://travis-ci.org/imulus/retinajs)
 
+## This is a forked repo.
+### There are no tests.
+
+**Bug fixes:**
+- Fix "Images with display:none get 0x0 dimensions" (Issue #97: https://github.com/imulus/retinajs/issues/97)
+- Skip retina replacement for SVG images (Issue #30: https://github.com/imulus/retinajs/issues/30)
+
+---
+
 ### JavaScript, LESS and SASS helpers for rendering high-resolution image variants
 
 retina.js makes it easy to serve high-resolution images to devices with retina displays
